@@ -2,7 +2,7 @@
 Configuration for baseline model training with K-fold cross-validation
 
 Author: Ziping Liu
-Date: Apr 7, 2024
+Date: Apr 8, 2024
 """
 
 
@@ -12,7 +12,7 @@ import warnings
 warnings.filterwarnings("ignore")
 import sys
 sys.path.append("../../")
-from main_v0_0 import main
+from main_v0_1 import main
 import pandas as pd
 import json
 
@@ -75,7 +75,7 @@ class Config():
         
         #########################################################################
         #                            TRAINING DETAIL
-        self.EXPORT_PATH = "/home/efs/ziping/workspaces/dfu/clf_algo_release_202404/results/240407/" + self.MODEL.strip().lower()
+        self.EXPORT_PATH = "/home/efs/ziping/workspaces/dfu/clf_algo_release_202404/results/240408/" + self.MODEL.strip().lower()
 
         self.BATCH_SIZE = batch_sz
         
@@ -101,7 +101,7 @@ if __name__ == "__main__":
         k_fold = 5
         save_model_per_epoch = False
     
-    gs_df = pd.read_csv("grid_search_240407.csv")
+    gs_df = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404/src/train/240407/grid_search_240407.csv")
     numerical_preprocess = {
         'NORMALIZATION': gs_df.iloc[idx]['numerical_preprocess_normalization'],
         'NUM_NEAREST_NEIGHBOURS': gs_df.iloc[idx]['numerical_preprocess_num_nearest_neighbor']

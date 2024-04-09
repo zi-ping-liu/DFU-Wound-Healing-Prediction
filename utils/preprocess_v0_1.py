@@ -2,7 +2,7 @@
 Encode and imputate clinical features used in classification model training
 
 Author: Ziping Liu
-Date: Apr 7, 2024
+Date: Apr 8, 2024
 """
 
 
@@ -34,7 +34,7 @@ class PreProcessing():
         
         # Keep only the feature columns and drop duplicate rows (due to multiple images per patient)
         cols_to_drop = ['ICGUID', 'Site', 'GT', 'DS_split', 'segmentation_split', 'good_ori', 'DS_Phase', 'Wound Location', 'USorUK', 'Visit Number', 'orientation_deg',
-                        'cm3_volume', 'cm2_surf_area', 'cm2_planar_area', 'cm_bbox_x', 'cm_bbox_y', 'cm_bbox_z']
+                        'ulcer_length', 'ulcer_width', 'ulcer_depth']
         self.df_train = df_train.drop(cols_to_drop, axis = 1).drop_duplicates().reset_index(drop = True)
         self.df_val = df_val.drop(cols_to_drop, axis = 1).drop_duplicates().reset_index(drop = True)
         
@@ -81,7 +81,7 @@ class PreProcessing():
         # Numerical features 1: Missing values in these features are filled with K-NN imputer
         self.NUMERICAL_1 = [
             'age', 'dialysis_years', 'temp', 'heart_rate', 'ulcer_duration',
-            'ulcer_length', 'ulcer_width', 'ulcer_depth'
+            'cm3_volume', 'cm2_surf_area', 'cm2_planar_area', 'cm_bbox_x', 'cm_bbox_y', 'cm_bbox_z'
         ]
         
         # Numerical features 2: Missing values in these features are filled also with K-NN imputer but after the above features
