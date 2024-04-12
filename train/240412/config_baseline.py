@@ -2,7 +2,7 @@
 Configuration for baseline model training with K-fold cross-validation
 
 Author: Ziping Liu
-Date: Apr 8, 2024
+Date: Apr 12, 2024
 """
 
 
@@ -75,7 +75,7 @@ class Config():
         
         #########################################################################
         #                            TRAINING DETAIL
-        self.EXPORT_PATH = "/home/efs/ziping/workspaces/dfu/clf_algo_release_202404/results/240408/" + self.MODEL.strip().lower()
+        self.EXPORT_PATH = "/home/efs/ziping/workspaces/dfu/clf_algo_release_202404/results/240412/" + self.MODEL.strip().lower()
 
         self.BATCH_SIZE = batch_sz
         
@@ -146,7 +146,7 @@ if __name__ == "__main__":
         'BASE_LR': gs_df.iloc[idx]['lr'],
     }
     
-    train_csv = "/home/efs/ziping/workspaces/dfu/clf_algo_release_202404/src/data/WAUSI_unifiedv3_BSVp1-7_with3D_20240408.csv"
+    train_csv = "/home/efs/ziping/workspaces/dfu/clf_algo_release_202404/src/data/WAUSI_unifiedv3_BSVp1-7_final1_20240411.csv"
     df = pd.read_csv(train_csv)
     
     if image_preprocess['USE_GOOD_ORI_ONLY']: # Keep only good-orientation cases
@@ -154,7 +154,7 @@ if __name__ == "__main__":
     
     test_set = df[df['DS_split'] != 'train']['subject_number'].unique().tolist()
     
-    train_msi = f"/home/efs/TrainingData/DFU/BSV_203subj_Processed_V4_centercrop_20240405/cropped_msi_ulcer_only/morph_{image_preprocess['MASK_DILATION']}"
+    train_msi = f"/home/efs/TrainingData/DFU/BSV_203subj_Processed_V4_centercrop_20240411/cropped_msi_ulcer_only/morph_{image_preprocess['MASK_DILATION']}"
     
     config = Config(
             version = gs_df.iloc[idx]['version'],
