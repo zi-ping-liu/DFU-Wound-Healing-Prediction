@@ -30,10 +30,14 @@ def stratify_on_ulcer_size(df_in, train_csv_in, country, best_guids, mode = 'pat
     else:
         name_ = 'US + EU'
         
-    # for q in np.linspace(0, 1, 11):
+    # train_csv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404/src/data/WAUSI_unifiedv3_BSVp1-7_final1_20240411.csv")
+    # train_csv = train_csv[train_csv['good_ori'] == 'Y'].reset_index(drop = True)
+    # train_csv = train_csv[~train_csv['DS_split'].isin(['bad_quality', 'exclude_from_classification'])].reset_index(drop = True)
+    # train_csv = train_csv[train_csv['USorUK'] == 'US'].reset_index(drop = True)
+    # for q in np.linspace(0, 1, 6):
     #     thres = train_csv[['subject_number', 'cm2_planar_area']].drop_duplicates()['cm2_planar_area'].quantile(q)
     #     print(thres)
-    thres_list = [0.08, 0.52, 1.32, 2.74, 5.96, 65.80, 10000]
+    thres_list = [0.08, 0.52, 1.31, 2.61, 5.76, 65.80, 10000]
     
     categs = [[] for _ in range(len(thres_list) - 1)]
     tags = [[] for _ in range(len(thres_list) - 1)]
@@ -195,13 +199,13 @@ if __name__ == '__main__':
     train_csv = train_csv[~train_csv['DS_split'].isin(['bad_quality', 'exclude_from_classification'])].reset_index(drop = True)
     
     # Subjects whose clinical features remain to be verified
-    # subjects_to_drop = ['201-018', '202-042', '202-047', '202-048', '202-050', '202-052', '202-056', '202-062', '202-067', '202-078', '202-082', '203-091', '292-044', '292-045', '292-024']
-    # train_csv = train_csv[~train_csv['subject_number'].isin(subjects_to_drop)].reset_index(drop = True)
+    subjects_to_drop = ['201-018', '202-042', '202-047', '202-048', '202-050', '202-052', '202-056', '202-062', '202-067', '202-078', '202-082', '203-091', '292-044', '292-045', '292-024']
+    train_csv = train_csv[~train_csv['subject_number'].isin(subjects_to_drop)].reset_index(drop = True)
     
     train_csv = train_csv[train_csv['USorUK'] == 'US'].reset_index(drop = True)
     
     prediction_path = "/home/efs/ziping/workspaces/dfu/clf_algo_release_202404/results/240407/baseline"
-    hs = 1526
+    hs = 45
     print(f"hs = {hs}")
     
     # df_pred = pd.read_csv(f"{prediction_path}/hs_{hs}/predictions_cv.csv")
