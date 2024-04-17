@@ -226,6 +226,8 @@ if __name__ == '__main__':
     # Path to model predictions
     prediction_path = sys.argv[1]
     hs = int(sys.argv[2])
+    early_val = sys.argv[3]
+    
     out_excel_path = f"/home/efs/ziping/workspaces/dfu/clf_algo_release_202404/out/stratified_analysis"
         
     # Load unified CSV used in training
@@ -236,8 +238,13 @@ if __name__ == '__main__':
     subjects_to_drop = ['201-018', '202-042', '202-047', '202-048', '202-050', '202-052', '202-056', '202-062', '202-067', '202-078', '202-082', '203-091', '292-044', '292-045', '292-024']
     train_csv = train_csv[~train_csv['subject_number'].isin(subjects_to_drop)].reset_index(drop = True)
     
-    # df_pred = pd.read_csv(f"{prediction_path}/hs_{hs}/predictions_cv.csv") # cross validation
-    df_pred = pd.read_csv(f"{prediction_path}/hs_{hs}/predictions_test.csv") # early validation
+    if early_val.strip().lower() == 'true':
+        df_pred = pd.read_csv(f"{prediction_path}/hs_{hs}/predictions_test.csv") # early validation
+        ds = 'test'
+    else:
+        df_pred = pd.read_csv(f"{prediction_path}/hs_{hs}/predictions_cv.csv") # cross validation
+        ds = 'cv'
+    
     df_pred = df_pred[df_pred['Visit Number'] == 'DFU_SV1'].reset_index(drop = True)
     
     # Gather ImgCollGUIDs that yield best orientation for each subject
@@ -260,7 +267,7 @@ if __name__ == '__main__':
     # for q in np.linspace(0, 1, 6):
     #     thres = train_csv[['subject_number', 'cm2_planar_area']].drop_duplicates()['cm2_planar_area'].quantile(q)
     #     print(thres)
-    thres_list = [0, 0.52, 1.31, 2.61, 5.76, float('inf')]
+    thres_list = [0, 0.52, 1.31, 2.61, 5.76, 65.81, float('inf')]
     
     strat_area_both_pat = stratify_on_ulcer_size(df_pred, train_csv, '', best_guids, thres_list, mode = 'pat')
     strat_area_both_img = stratify_on_ulcer_size(df_pred, train_csv, '', best_guids, thres_list, mode = 'img')
@@ -302,7 +309,7 @@ if __name__ == '__main__':
     blank_row = pd.DataFrame(np.nan, index=[0, 1], columns = out_df_1.columns)    
     out_df = pd.concat([out_df_1, blank_row.copy(), out_df_2a, blank_row.copy(), out_df_2b, blank_row.copy(), out_df_2c, blank_row.copy(), out_df_3a, blank_row.copy(), out_df_3b, blank_row.copy(), out_df_3c], ignore_index = True).round(3)
 
-    with pd.ExcelWriter(f"{out_excel_path}/{'_'.join(prediction_path.split('/')[-2:])}_hs_{hs}.xlsx", engine = 'openpyxl') as writer:
+    with pd.ExcelWriter(f"{out_excel_path}/{'_'.join(prediction_path.split('/')[-2:])}_hs_{hs}_{ds}.xlsx", engine = 'openpyxl') as writer:
         
         out_df.to_excel(writer, index = False, sheet_name = 'Sheet1')
         
